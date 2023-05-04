@@ -37,18 +37,16 @@ class TUDPTransport(TTransportBase, object):
         self.transport_sock.setblocking(blocking)
 
     def _create_socket(self) -> socket.socket:
-        family, type, proto = (self.DEFAULT_SOCKET_FAMILY, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+        family, typ3, proto = (self.DEFAULT_SOCKET_FAMILY, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 
         try:
-            addrinfo = socket.getaddrinfo(
-                self.transport_host, self.transport_port, type=socket.SOCK_DGRAM
-            )
+            addrinfo = socket.getaddrinfo(self.transport_host, self.transport_port, 0, socket.SOCK_DGRAM)
             if addrinfo:
-                family, type, proto, *_ = addrinfo[0]
+                family, typ3, proto, *_ = addrinfo[0]
         except socket.gaierror:
             pass
 
-        return socket.socket(family, type, proto)
+        return socket.socket(family, typ3, proto)
 
     def write(self, buf):
         """Raw write to the UDP socket."""
